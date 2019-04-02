@@ -36,7 +36,7 @@
               <template v-slot:items="props">
                 <td class="text-xs-left">{{ props.item.empresa }}</td>                
                 <td class="text-xs-right">
-                  <v-btn @click="visualizar" flat icon>
+                  <v-btn @click="visualizar(props.item.empresa)" flat icon>
                     <v-icon>remove_red_eye</v-icon>
                   </v-btn>
                 </td>
@@ -80,10 +80,10 @@
     },
     methods: {
       visualizar(nome) {        
-        this.$router.push({name: 'Dashboard', params: {empresa: nome}});
+        this.$router.push({name: 'Dashboard', params: {empresa: nome.toLowerCase()}});
       },
       buscarEmpresas() {
-         this.axios.get('http://localhost:3000/monitorings')
+         this.axios.get('http://ceb99c46.ngrok.io/monitorings')
           .then( res => {
             let nomeEmpresas = [... new Set(res.data.map( x => x.empresa))];            
             for(let i = 0; i < nomeEmpresas.length; i++) {              

@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import Home from './views/Home.vue';
+import Home from './components/HelloWorld.vue';
+import Dashboard from './components/Dashboard.vue';
 
 Vue.use(Router);
 
@@ -10,6 +11,11 @@ export default new Router({
       path: '/',
       name: 'home',
       component: Home
+    },
+    {
+      path: '/dash/:empresa',
+      name: 'Dashboard',
+      component: Dashboard
     },
     {
       path: '/',
