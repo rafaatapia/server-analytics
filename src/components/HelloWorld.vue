@@ -20,7 +20,7 @@
 
         <v-layout justify-center>
           <v-card>
-            <v-card-title>                            
+            <v-card-title>               
               <v-text-field
                 v-model="search"
                 append-icon="search"
@@ -29,6 +29,7 @@
                 hide-details
               ></v-text-field>
             </v-card-title>
+            <v-progress-linear v-if="isLoading" v-slot:progress color="blue" height="3" indeterminate></v-progress-linear>
             <v-data-table
               :headers="headers"
               :items="empresas"
@@ -60,6 +61,7 @@
     data: () => ({
       empresas: [],
       search: '',
+      isLoading: true,
       headers: [
           {
             text: 'Empresa',
@@ -83,13 +85,14 @@
         this.$router.push({name: 'Dashboard', params: {empresa: nome.toLowerCase()}});
       },
       buscarEmpresas() {
-         this.axios.get('http://ceb99c46.ngrok.io/monitorings')
+        this.isLoading = true;
+         this.axios.get('http://981eaccf.ngrok.io/monitorings')
           .then( res => {
             let nomeEmpresas = [... new Set(res.data.map( x => x.empresa))];            
             for(let i = 0; i < nomeEmpresas.length; i++) {              
               this.empresas.push({empresa: nomeEmpresas[i].charAt(0).toUpperCase() + nomeEmpresas[i].slice(1)})
             }
-          });
+          }).finally(() => this.isLoading = false);
       }
     }    
   }

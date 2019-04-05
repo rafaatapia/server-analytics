@@ -16,26 +16,18 @@
         mb-5
         xs12>
 
-        <h2 class="headline font-weight-bold mb-3">Monitoramento</h2>         
-
+        <h2 class="headline font-weight-bold mb-3">{{ nome }}</h2>         
+        <v-btn @click="buscarEmpresas()" flat icon>
+                    <v-icon>refresh</v-icon>
+        </v-btn>
         <v-layout justify-center>
           <v-card>
-            <v-card-title>                            
-              <v-text-field
-                v-model="search"
-                append-icon="search"
-                label="Search"
-                single-line
-                hide-details
-              ></v-text-field>
-            </v-card-title>
-            <v-progress-linear v-if="isLoading" v-slot:progress color="blue" indeterminate></v-progress-linear>
+            <v-progress-linear v-if="isLoading" v-slot:progress color="blue" height="3" indeterminate></v-progress-linear>
             <v-data-table
               :headers="headers"
               :items="infos"
               :pagination.sync="pagination"
-				      :rows-per-page-items="pagination.rowsPerPageItems"
-              :search="search">              
+				      :rows-per-page-items="pagination.rowsPerPageItems">              
               <template v-slot:items="props">
                 <td class="text-xs-left">{{ props.item.memoria_total }}Gb</td>
                 <td class="text-xs-left">{{ props.item.memoria_usada }}Gb</td>
@@ -77,7 +69,7 @@
 					}]
       },
       infos: [],
-      search: '',
+      nome: '',
       isLoading: 'true',
       headers: [
           {
@@ -119,6 +111,7 @@
     }),
     mounted() {
       this.buscarEmpresas();
+      this.nome = this.$route.params.empresa.toUpperCase();
      
     },
     filters: {
@@ -157,9 +150,9 @@
         }
       },
       buscarEmpresas() {
-         this.axios.get('http://ceb99c46.ngrok.io/monitorings?empresa=' + this.$route.params.empresa)
+        this.isLoading = true;
+         this.axios.get('http://981eaccf.ngrok.io/monitorings?empresa=' + this.$route.params.empresa.toLowerCase())
           .then( res => {
-              this.isLoading = true;
               this.infos = res.data[0];                          
             }).finally( () => {
               this.isLoading = false;
